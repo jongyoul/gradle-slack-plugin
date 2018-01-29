@@ -11,6 +11,7 @@ class Attachment {
   String color
   String fallback
   def fields = []
+  def actions = []
   String footer
   String footerIcon
   String imageUrl
@@ -28,4 +29,13 @@ class Attachment {
     fields << field
     closure()
   }
+
+  def action(Closure closure) {
+    closure.resolveStrategy = Closure.DELEGATE_FIRST
+    Action action = new Action()
+    closure.delegate = action
+    actions << action
+    closure()
+  }
+
 }
