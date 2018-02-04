@@ -27,6 +27,25 @@ slack {
         value = 'Success'
         shortValue = true
       }
+      action {
+        name: 'game'
+        text: 'Chess'
+        type: "button"
+        value: "chess"
+      }
+      action {
+        name: 'game'
+        text: 'Thermonuclear War'
+        style: 'danger'
+        type: 'button'
+        value: 'war'
+        confirm {
+           title: 'Are you sure?'
+           text: 'Wouldn't you prefer a good game of chess?'
+           okText: 'Yes'
+           dismissText: 'No'
+        }
+      }    
     }
   }
 }
