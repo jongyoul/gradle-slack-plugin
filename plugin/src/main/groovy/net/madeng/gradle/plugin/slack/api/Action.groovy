@@ -20,11 +20,12 @@ class Action {
     closure()
   }
 
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   class Confirm {
-    String title;
-    String text;
-    String okText;
-    String dismissText;
+    String title
+    String text
+    String okText
+    String dismissText
   }
 
 }

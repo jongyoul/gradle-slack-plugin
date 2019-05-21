@@ -10,7 +10,11 @@ class Attachment {
   String authorIcon
   String color
   String fallback
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   def fields = []
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
+  def blocks = []
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   def actions = []
   String footer
   String footerIcon
@@ -35,6 +39,14 @@ class Attachment {
     Action action = new Action()
     closure.delegate = action
     actions << action
+    closure()
+  }
+
+  void block(Closure closure) {
+    closure.resolveStrategy = Closure.DELEGATE_FIRST
+    Block block = new Block()
+    closure.delegate = block
+    blocks << block
     closure()
   }
 
