@@ -14,8 +14,14 @@ class Message {
   String iconEmoji
   String text
   String username
-  String threadTs
   Boolean mrkdwn
+  Boolean asUser
+  Boolean linkNames
+  String parse
+  Boolean unfurlLinks
+  Boolean unfurlMedia
+  String threadTs
+  Boolean replyBroadcast
 
   void attachment(Closure closure) {
     closure.resolveStrategy = Closure.DELEGATE_FIRST
