@@ -1,8 +1,108 @@
-subprojects {
-  group = 'net.madeng'
-  version = '0.0.22'
+plugins {
+  id 'idea'
+  id 'groovy'
+  id 'java-gradle-plugin'
+  id 'jacoco'
+  id 'com.gradle.build-scan' version '2.4.2'
+  id 'com.gradle.plugin-publish' version '0.10.1'
+}
 
-  repositories {
-    jcenter()
+ext {
+  junit5Version = '5.5.2'
+}
+
+group "net.madeng.slack"
+version '0.0.22-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+pluginBundle {
+  website = 'https://github.com/jongyoul/gradle-slack-plugin'
+  vcsUrl = 'https://github.com/jongyoul/gradle-slack-plugin'
+  description = 'Slack plugin for gradle'
+  tags = ['slack']
+
+  // To prevent from adding the prefix of 'gradle.plugin' in front of groupId
+  /*mavenCoordinates {
+    groupId = "${project.group}"
+    artifactId = "${rootProject.name}"
+    version = "${project.version}"
+  }*/
+}
+
+gradlePlugin {
+  plugins {
+    slackPlugin {
+      id = 'net.madeng.slack'
+      displayName = 'Slack Plugin'
+      description = 'Send a message to slack easily'
+      implementationClass = 'net.madeng.slack.SlackPlugin'
+    }
   }
 }
+
+repositories {
+  mavenCentral()
+}
+
+// For testing
+// Write the plugin's classpath to a file to share with the tests
+task createClasspathManifest {
+  def outputDir = file("$buildDir/$name")
+
+  inputs.files(sourceSets.main.runtimeClasspath)
+      .withPropertyName("runtimeClasspath")
+      .withNormalizer(ClasspathNormalizer)
+  outputs.dir(outputDir)
+      .withPropertyName("outputDir")
+
+  doLast {
+    outputDir.mkdirs()
+    file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
+  }
+}
+
+dependencies {
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+  compile 'org.apache.httpcomponents:httpclient:4.5.3'
+
+  testImplementation gradleTestKit()
+  testImplementation("org.spockframework:spock-core:1.3-groovy-2.4") {
+    exclude module: 'groovy-all'
+  }
+  testImplementation "org.junit.jupiter:junit-jupiter-api:${junit5Version}"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junit5Version}"
+  testRuntimeOnly "org.junit.vintage:junit-vintage-engine:${junit5Version}"
+  // Add the classpath file to the test runtime classpath
+  testRuntimeOnly files(createClasspathManifest)
+}
+
+test {
+  environment(
+      "PLUGIN_ID": "${project.group}",
+      "PLUGIN_ARTIFACT": "${rootProject.name}",
+      "PLUGIN_PROPERTIES_FILE": "${System.getProperty('user.home')}/.slack/publish.properties"
+  )
+  useJUnitPlatform()
+  testLogging {
+    events "PASSED", "FAILED", "SKIPPED"
+  }
+}
+
+jacocoTestReport {
+  reports {
+    xml.enabled true
+    html.enabled false
+  }
+}
+
+check.dependsOn jacocoTestReport
+
+buildScan {
+  termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+  termsOfServiceAgree = 'yes'
+
+  publishAlways()
+}
+
+

@@ -1,6 +1,6 @@
-package net.madeng.gradle.plugin.slack
+package net.madeng.slack
 
-import net.madeng.gradle.plugin.slack.api.Message
+import net.madeng.slack.api.Message
 
 class SlackExtension {
 

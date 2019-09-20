@@ -1,8 +1,6 @@
 package net.madeng.slack
 
 import groovy.json.JsonSlurper
-import net.madeng.gradle.plugin.slack.SlackExtension
-import net.madeng.gradle.plugin.slack.SlackTask
 import spock.lang.Specification
 
 class MessageTest extends Specification {

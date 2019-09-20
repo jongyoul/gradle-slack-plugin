@@ -1,7 +1,6 @@
-package net.madeng.gradle.plugin.slack.api
+package net.madeng.slack.api
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class Block {
