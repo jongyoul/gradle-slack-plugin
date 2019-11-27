@@ -12,6 +12,7 @@ class Element {
     String imageUrl
     String altText
     String value
+    String url
     Text text
     @JsonIgnore
     private String textString
